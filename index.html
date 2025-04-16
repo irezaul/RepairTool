@@ -6,48 +6,64 @@
   <title>RHT- Repair Help Tool</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
     .animate-fade-in {
-      animation: fadeIn 0.6s ease-out forwards;
+      animation: fadeIn 0.2s ease-out forwards;
     }
     .input-field:focus-within {
       border-color: #3B82F6;
       box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
     }
+    @keyframes pulse {
+      0% { opacity: 0.8; }
+      100% { opacity: 1; }
+    }
+    .animate-copyright {
+      animation: pulse 2s ease-in-out infinite alternate;
+    }
+    .login-container {
+      max-height: 95vh;
+    }
   </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-gray-100 min-h-screen flex items-center justify-center p-4">
+<body class="bg-gradient-to-br from-blue-50 to-gray-100 flex items-center justify-center p-4 h-screen">
   <!-- Login Card -->
-  <div class="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden animate-fade-in opacity-0" style="animation-delay: 0.2s">
+  <div class="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden animate-fade-in opacity-0 login-container" style="animation-delay: 0.2s">
     <!-- Header with Logo -->
-    <div class="bg-gradient-to-r from-blue-600 to-blue-400 p-6 text-center">
-      <div class="flex justify-center mb-3">
-        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="bg-gradient-to-r from-blue-600 to-blue-400 p-4 text-center">
+      <div class="flex justify-center mb-2">
+        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
         </svg>
       </div>
-      <h2 class="text-2xl font-bold text-white">RHT</h2>
-      <h1 class="text-2xl font-bold text-white">Repair Help Tool</h1>
-      <p class="text-blue-100 mt-1">Device Management Portal</p>
+      <h2 class="text-xl font-bold text-white">RHT</h2>
+      <h1 class="text-xl font-bold text-white">Repair Help Tool</h1>
+      <p class="text-blue-100 text-sm mt-1">Device Management Portal</p>
     </div>
 
     <!-- Login Form -->
-    <form class="p-6 space-y-5" id="loginForm">
-      <div class="space-y-4">
+    <form class="p-4 space-y-4" id="loginForm">
+      <div class="space-y-3">
         <!-- Email Field -->
         <div class="input-field transition-all duration-300 border border-gray-200 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-blue-200">
-          <div class="flex items-center px-4 py-3">
-            <svg class="w-5 h-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="flex items-center px-3 py-2">
+            <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
             </svg>
             <input 
               type="email" 
               id="email" 
               placeholder="Email address" 
-              class="w-full outline-none text-gray-700 placeholder-gray-400"
+              class="w-full outline-none text-gray-700 placeholder-gray-400 text-sm"
               required
             >
           </div>
@@ -55,15 +71,15 @@
 
         <!-- Password Field -->
         <div class="input-field transition-all duration-300 border border-gray-200 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-blue-200">
-          <div class="flex items-center px-4 py-3">
-            <svg class="w-5 h-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="flex items-center px-3 py-2">
+            <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
             <input 
               type="password" 
               id="password" 
               placeholder="Password" 
-              class="w-full outline-none text-gray-700 placeholder-gray-400"
+              class="w-full outline-none text-gray-700 placeholder-gray-400 text-sm"
               required
               minlength="6"
             >
@@ -79,15 +95,15 @@
             id="remember" 
             class="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
           >
-          <label for="remember" class="ml-2 text-sm text-gray-600">Remember me</label>
+          <label for="remember" class="ml-2 text-xs text-gray-600">Remember me</label>
         </div>
-        <a href="#" class="text-sm text-blue-600 hover:underline">Forgot password?</a>
+        <a href="#" class="text-xs text-blue-600 hover:underline">Forgot password?</a>
       </div>
 
       <!-- Submit Button -->
       <button 
         type="submit" 
-        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-medium transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-sm"
       >
         Sign In
       </button>
@@ -97,40 +113,41 @@
         <div class="absolute inset-0 flex items-center">
           <div class="w-full border-t border-gray-200"></div>
         </div>
-        <div class="relative flex justify-center text-sm">
+        <div class="relative flex justify-center text-xs">
           <span class="px-2 bg-white text-gray-500">Or continue with</span>
         </div>
       </div>
 
       <!-- Social Login -->
-      <div class="grid grid-cols-2 gap-3">
+      <div class="grid grid-cols-2 gap-2">
         <button 
           type="button"
-          class="flex items-center justify-center py-2 px-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
+          class="flex items-center justify-center py-1 px-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition text-sm"
         >
-          <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
             <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" />
           </svg>
-          <span class="ml-2 text-gray-700">Facebook</span>
+          <span class="ml-1 text-gray-700">Facebook</span>
         </button>
         <button 
           type="button"
-          class="flex items-center justify-center py-2 px-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
+          class="flex items-center justify-center py-1 px-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition text-sm"
         >
-          <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12.545 10.239v3.821h5.445c-.712 2.315-2.647 3.972-5.445 3.972-3.332 0-6.033-2.701-6.033-6.032s2.701-6.032 6.033-6.032c1.498 0 2.866.549 3.921 1.453l2.814-2.814C17.503 2.332 15.139 1.5 12.545 1.5 7.021 1.5 2.545 5.976 2.545 11.5s4.476 10 10 10c8.396 0 10-7.496 10-10 0-.67-.069-1.325-.189-1.961H12.545z" />
           </svg>
-          <span class="ml-2 text-gray-700">Google</span>
+          <span class="ml-1 text-gray-700">Google</span>
         </button>
       </div>
     </form>
 
     <!-- Footer -->
-    <div class="bg-gray-50 px-6 py-4 text-center">
-      <p class="text-sm text-gray-600">
+    <div class="bg-gray-50 px-4 py-3 text-center border-t border-gray-200">
+      <p class="text-xs text-gray-600">
         Don't have an account? 
         <a href="#" class="text-blue-600 hover:underline font-medium">Sign up</a>
       </p>
+      <p class="text-xs text-gray-500 mt-1 animate-copyright">@copyright Muhammad Rezaul Karim</p>
     </div>
   </div>
 
@@ -172,6 +189,20 @@
         this.parentElement.parentElement.classList.remove('ring-2', 'ring-blue-200');
       });
     });
+
+    // Adjust card height on window resize
+    function adjustCardHeight() {
+      const card = document.querySelector('.login-container');
+      const windowHeight = window.innerHeight;
+      const maxCardHeight = windowHeight * 0.95; // 95% of viewport height
+      card.style.maxHeight = `${maxCardHeight}px`;
+    }
+
+    // Initial adjustment
+    adjustCardHeight();
+    
+    // Adjust on window resize
+    window.addEventListener('resize', adjustCardHeight);
   </script>
 </body>
 </html>

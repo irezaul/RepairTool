@@ -6,6 +6,10 @@
   <title>Device Model Manager</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
     .model-list {
       transition: max-height 0.3s ease-out, opacity 0.2s ease;
       overflow: hidden;
@@ -18,21 +22,24 @@
       border-left-color: #E5E7EB;
     }
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0.5; }
+      to { opacity: 1; }
     }
     .animate-owner {
       animation: fadeIn 2s ease-in-out infinite alternate;
     }
+    .content-container {
+      height: calc(100vh - 60px); /* Adjust based on your header/footer height */
+    }
   </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
+<body class="bg-gray-50 flex flex-col h-screen">
   <!-- Main Content Area -->
-  <div class="flex flex-1">
+  <div class="flex flex-1 overflow-hidden">
     <!-- Left Sidebar -->
-    <div class="w-72 bg-white border-r border-gray-200 h-screen overflow-y-auto flex flex-col">
+    <div class="w-72 bg-white border-r border-gray-200 flex flex-col">
       <!-- Header -->
-      <div class="p-4 border-b sticky top-0 bg-white z-10">
+      <div class="p-4 border-b">
         <h1 class="text-xl font-bold flex items-center gap-2">
           <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
@@ -48,8 +55,8 @@
     </div>
 
     <!-- Right Content Area -->
-    <div class="flex-1 overflow-auto">
-      <div id="contentArea" class="p-6">
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <div id="contentArea" class="flex-1 overflow-auto p-6">
         <!-- Back to Home Button (Sticky) -->
         <div class="sticky top-0 mb-6 flex justify-end z-10">
           <a href="index.html" class="flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm">
@@ -61,7 +68,7 @@
         </div>
 
         <!-- Default Empty State -->
-        <div class="text-center py-20">
+        <div class="text-center py-10">
           <svg class="w-16 h-16 mx-auto text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
           </svg>
@@ -72,9 +79,9 @@
     </div>
   </div>
 
-  <!-- Footer with Copyright -->
-  <div class="py-4 text-center border-t border-gray-200 bg-white">
-    <p class="text-gray-500 animate-owner">@copyright Muhammad Rezaul Karim</p>
+  <!-- Footer with Copyright - Always visible -->
+  <div class="py-2 text-center border-t border-gray-200 bg-white">
+    <p class="text-gray-500 animate-owner text-sm">@copyright Muhammad Rezaul Karim</p>
   </div>
 
   <!-- JavaScript -->
@@ -117,7 +124,7 @@
     // ===== CONTENT TEMPLATE =====
     const createContentCard = (brand, model, specs) => {
       return `
-        <div class="bg-white rounded-xl shadow-sm p-6 max-w-2xl">
+        <div class="bg-white rounded-xl shadow-sm p-6 max-w-2xl mb-6">
           <div class="flex items-start gap-4">
             <div class="p-3 rounded-lg" style="background-color: ${brand.color}20">
               <svg class="w-8 h-8" fill="${brand.color}" viewBox="0 0 24 24">
