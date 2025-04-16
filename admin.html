@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Device Model Manager</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .model-list {
+      transition: max-height 0.3s ease-out, opacity 0.2s ease;
+      overflow: hidden;
+    }
+    .brand-section {
+      border-left: 3px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .brand-section:hover {
+      border-left-color: #E5E7EB;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-owner {
+      animation: fadeIn 2s ease-in-out infinite alternate;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+  <!-- Main Content Area -->
+  <div class="flex flex-1">
+    <!-- Left Sidebar -->
+    <div class="w-72 bg-white border-r border-gray-200 h-screen overflow-y-auto flex flex-col">
+      <!-- Header -->
+      <div class="p-4 border-b sticky top-0 bg-white z-10">
+        <h1 class="text-xl font-bold flex items-center gap-2">
+          <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+          </svg>
+          Device Models
+        </h1>
+      </div>
+
+      <!-- Device Models List -->
+      <div id="brandsContainer" class="flex-1 overflow-y-auto p-2">
+        <!-- Brand sections will be added here dynamically -->
+      </div>
+    </div>
+
+    <!-- Right Content Area -->
+    <div class="flex-1 overflow-auto">
+      <div id="contentArea" class="p-6">
+        <!-- Back to Home Button (Sticky) -->
+        <div class="sticky top-0 mb-6 flex justify-end z-10">
+          <a href="index.html" class="flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            Back to Home
+          </a>
+        </div>
+
+        <!-- Default Empty State -->
+        <div class="text-center py-20">
+          <svg class="w-16 h-16 mx-auto text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+          <h2 class="text-xl font-semibold mt-4 text-gray-600">No Device Selected</h2>
+          <p class="text-gray-400 mt-1">Select a model from the sidebar</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer with Copyright -->
+  <div class="py-4 text-center border-t border-gray-200 bg-white">
+    <p class="text-gray-500 animate-owner">@copyright Muhammad Rezaul Karim</p>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // ===== BRAND TEMPLATE =====
+    const createBrandSection = (brandName, color) => {
+      const brandId = brandName.toLowerCase().replace(/\s+/g, '-');
+      return `
+        <div class="brand-section mb-2">
+          <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded cursor-pointer category-toggle" 
+               data-category="${brandId}">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4" fill="${color}" viewBox="0 0 24 24">
+                <path d="M12 2L4 7v10l8 5 8-5V7L12 2z"></path>
+              </svg>
+              <span class="font-medium">${brandName}</span>
+            </div>
+            <svg class="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+          <ul id="${brandId}-models" class="model-list pl-6 mt-1 max-h-0 opacity-0">
+            <!-- Models will be added here -->
+          </ul>
+        </div>
+      `;
+    };
+
+    // ===== MODEL TEMPLATE =====
+    const createModelItem = (modelName, modelId) => {
+      return `
+        <li class="model-item p-2 hover:bg-blue-50 cursor-pointer flex items-center gap-2" 
+            data-model="${modelId}">
+          <div class="w-1.5 h-1.5 bg-gray-400 rounded-full"></div>
+          <span>${modelName}</span>
+        </li>
+      `;
+    };
+
+    // ===== CONTENT TEMPLATE =====
+    const createContentCard = (brand, model, specs) => {
+      return `
+        <div class="bg-white rounded-xl shadow-sm p-6 max-w-2xl">
+          <div class="flex items-start gap-4">
+            <div class="p-3 rounded-lg" style="background-color: ${brand.color}20">
+              <svg class="w-8 h-8" fill="${brand.color}" viewBox="0 0 24 24">
+                <path d="M12 2L4 7v10l8 5 8-5V7L12 2z"></path>
+              </svg>
+            </div>
+            <div>
+              <div class="flex items-center gap-3">
+                <h1 class="text-2xl font-bold">${brand.name} ${model.name}</h1>
+                <span class="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-sm">${model.year || ''}</span>
+              </div>
+              <p class="text-gray-500 mt-1">${model.description || ''}</p>
+              
+              <div class="mt-4 grid grid-cols-2 gap-4">
+                ${Object.entries(specs).map(([key, value]) => `
+                  <div>
+                    <p class="text-sm text-gray-500">${key}</p>
+                    <p class="font-medium">${value}</p>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    };
+
+    // ===== SAMPLE DATA =====
+    const deviceDatabase = {
+      brands: [
+        {
+          id: "xiaomi",
+          name: "Xiaomi",
+          color: "#FF9500",
+          models: [
+            {
+              id: "redmi-note-10",
+              name: "Redmi Note 10",
+              year: "2021",
+              description: "Mid-range smartphone with AMOLED display",
+              specs: {
+                "Chipset": "Snapdragon 678",
+                "RAM": "4/6GB",
+                "Storage": "64/128GB",
+                "Resistors": "43k"
+              }
+            },
+            {
+              id: "redmi-13",
+              name: "Redmi 13",
+              year: "2024",
+              description: "Latest budget-friendly model",
+              specs: {
+                "Chipset": "Helio G91",
+                "Display": "6.79\" IPS LCD",
+                "RAM": "6/8GB",
+                "Storage": "128/256GB"
+              }
+            }
+          ]
+        },
+        {
+          id: "samsung",
+          name: "Samsung",
+          color: "#0066FF",
+          models: [
+            {
+              id: "s22",
+              name: "Galaxy S22",
+              year: "2022",
+              description: "Compact flagship with powerful camera",
+              specs: {
+                "Chipset": "Exynos 2200",
+                "Display": "6.1\" Dynamic AMOLED",
+                "RAM": "8GB",
+                "Storage": "128/256GB"
+              }
+            },
+            {
+              id: "s23",
+              name: "Galaxy S23",
+              year: "2023",
+              description: "Premium performance with improved battery",
+              specs: {
+                "Chipset": "Snapdragon 8 Gen 2",
+                "Display": "6.1\" Dynamic AMOLED 2X",
+                "RAM": "8GB",
+                "Storage": "256/512GB"
+              }
+            }
+          ]
+        }
+      ]
+    };
+
+    // ===== INITIALIZE APP =====
+    document.addEventListener('DOMContentLoaded', () => {
+      const brandsContainer = document.getElementById('brandsContainer');
+      
+      // Load sample brands
+      deviceDatabase.brands.forEach(brand => {
+        // Add brand section
+        brandsContainer.insertAdjacentHTML('beforeend', createBrandSection(brand.name, brand.color));
+        
+        // Add models
+        const modelsContainer = document.getElementById(`${brand.id}-models`);
+        brand.models.forEach(model => {
+          modelsContainer.insertAdjacentHTML('beforeend', createModelItem(model.name, model.id));
+        });
+      });
+
+      // Set up event listeners
+      setupEventListeners();
+    });
+
+    // ===== EVENT HANDLERS =====
+    function setupEventListeners() {
+      let currentlyOpenBrand = null;
+
+      // Toggle brand expansion
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('.category-toggle')) {
+          const toggle = e.target.closest('.category-toggle');
+          const category = toggle.getAttribute('data-category');
+          const modelList = document.getElementById(`${category}-models`);
+          const arrow = toggle.querySelector('svg:last-child');
+          
+          // Close previously opened brand if different
+          if (currentlyOpenBrand && currentlyOpenBrand !== category) {
+            const prevList = document.getElementById(`${currentlyOpenBrand}-models`);
+            const prevArrow = document.querySelector(`[data-category="${currentlyOpenBrand}"] svg:last-child`);
+            prevList.classList.add('max-h-0', 'opacity-0');
+            prevList.classList.remove('max-h-[500px]', 'opacity-100');
+            prevArrow.classList.remove('rotate-180');
+          }
+          
+          // Toggle current brand
+          if (modelList.classList.contains('max-h-0')) {
+            modelList.classList.remove('max-h-0', 'opacity-0');
+            modelList.classList.add('max-h-[500px]', 'opacity-100');
+            arrow.classList.add('rotate-180');
+            currentlyOpenBrand = category;
+          } else {
+            modelList.classList.add('max-h-0', 'opacity-0');
+            modelList.classList.remove('max-h-[500px]', 'opacity-100');
+            arrow.classList.remove('rotate-180');
+            currentlyOpenBrand = null;
+          }
+        }
+      });
+
+      // Model selection
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('.model-item')) {
+          const modelItem = e.target.closest('.model-item');
+          const modelId = modelItem.getAttribute('data-model');
+          
+          // Find model data
+          let selectedModel = null;
+          let selectedBrand = null;
+          
+          deviceDatabase.brands.forEach(brand => {
+            const model = brand.models.find(m => m.id === modelId);
+            if (model) {
+              selectedModel = model;
+              selectedBrand = brand;
+            }
+          });
+
+          // Update UI
+          document.querySelectorAll('.model-item').forEach(item => {
+            item.classList.remove('bg-blue-100', 'text-blue-600');
+          });
+          modelItem.classList.add('bg-blue-100', 'text-blue-600');
+
+          // Show content
+          if (selectedModel && selectedBrand) {
+            document.getElementById('contentArea').innerHTML = `
+              <div class="sticky top-0 mb-6 flex justify-end z-10">
+                <a href="index.html" class="flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                  </svg>
+                  Back to Home
+                </a>
+              </div>
+              ${createContentCard(selectedBrand, selectedModel, selectedModel.specs)}
+            `;
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
